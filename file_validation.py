@@ -28,3 +28,4 @@ def check_malformed(csv_file):
     else:
         return False
 
+
