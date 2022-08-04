@@ -15,10 +15,12 @@ all_batch_ids = []
 
 
 def get_row_count(csv_file):
+    # return number of rows in file
     return df.shape[0]
 
 
 def check_headers(csv_file):
+    # confirm no headers missing
     headers = list(df)
     if headers == header_names:
         return True
@@ -27,25 +29,32 @@ def check_headers(csv_file):
 
 
 def check_missing_data(csv_file):
+    # return any missing cell values
     for header in header_names:
         for i in range(get_row_count(df)):
             if pd.isnull(df.loc[i, header]):
-                print(f'{header}: missing value in row {i}')
+                print(f'Missing value in column: {header}, in row {i}')
+                # return boolean
 
 
 def check_batch_id(csv_file):
+    # confirm batch id is not a duplicate
     for batch_id in df['batch_id']:
         if batch_id not in all_batch_ids:
             all_batch_ids.append(batch_id)
             return True
         else:
-            print("this batch file already exists")
+            print("This batch file already exists")
             return False
 
 
 def check_malformed(csv_file):
+    # check for any file malformations
     if csv_file.lower().endswith('.csv'):
+        # check other malformations
         return True
     else:
         return False
 
+
+# create validation function that calls each sub-function
