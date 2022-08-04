@@ -1,0 +1,6 @@
+$action = New-ScheduledTaskAction -Execute "C:\Users\<--->\PycharmProjects\pharma_app\main.py" -Argument "<arg>"
+$trigger = New-ScheduledTaskTrigger -<date> -At <time>
+$trigger.StartBoundary = [DateTime]::Parse($trigger.StartBoundary).ToLocalTime().ToString("s")
+$settings = New-ScheduledTaskSettingsSet -ExecutionTimeLimit 0
+
+Register-ScheduledTask -Action $action -Trigger $trigger -Settings $settings -TaskName "medical csv download" -Description "download csv"
