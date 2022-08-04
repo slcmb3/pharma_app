@@ -42,5 +42,3 @@ def user_menu():
         else:
             print("Input not recognised")
 
-
-user_menu()

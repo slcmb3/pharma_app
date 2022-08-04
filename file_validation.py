@@ -32,6 +32,7 @@ def check_missing_data(csv_file):
             if pd.isnull(df.loc[i, header]):
                 print(f'{header}: missing value in row {i}')
 
+
 def check_batch_id(csv_file):
     for batch_id in df['batch_id']:
         if batch_id not in all_batch_ids:
@@ -48,5 +49,3 @@ def check_malformed(csv_file):
     else:
         return False
 
-
-check_headers(df)
