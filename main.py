@@ -7,17 +7,20 @@ def interactive():
     try:
         year, month, day = map(int, date_entry.split('-'))
         csv_date = datetime.date(year, month, day)
+        # if batch id is not duplicate:
         if check_batch_id(f'MED_DATA_{str(year)}{str(month)}{str(day)}'):
             pass
-            # - perform csv download function
+            # - perform csv FTP download - use the argument to check if date substring exists and download all
+            # files with that date
         else:
-            print()
+            print('This file is a duplicate')
     except ValueError as err:
         print('\nIncorrect format')
         user_menu()
 
 
 def scheduler():
+    # set a date and time for scheduler to download files
     pass
 
 
