@@ -10,7 +10,7 @@ df = pd.read_csv(csv_file_name)
 header_names = ["batch_id", "timestamp", "reading1", "reading2", "reading3", "reading4", "reading5",
                 "reading6", "reading7", "reading8", "reading9", "reading10"]
 
-# this list will need to get all id's of downloaded files, when application starts
+# this list will need to get all id's of downloaded files from allocated directory, when application starts
 all_batch_ids = []
 
 
@@ -37,6 +37,18 @@ def check_missing_data(csv_file):
                 # return boolean
 
 
+def check_valid_entry(csv_file):
+    for header in header_names[2:]:
+        for i in range(get_row_count(df)):
+            cell = df.loc[i, header]
+            cell = str(cell)
+            if cell != 'nan':
+                cell = float(cell)
+                if cell >= 10:
+                    print('error', df.loc[i, header])
+                    return False
+
+
 def check_batch_id(csv_file):
     # confirm batch id is not a duplicate
     for batch_id in df['batch_id']:
@@ -57,4 +69,10 @@ def check_malformed(csv_file):
         return False
 
 
+check_valid_entry(df)
+
+# if not check_valid_entry(df):
+#     print('invalid entries')
+
+# create function for invalid entry etc..
 # create validation function that calls each sub-function
