@@ -10,8 +10,10 @@ def interactive():
         # if batch id is not duplicate:
         if check_batch_id(f'MED_DATA_{str(year)}{str(month)}{str(day)}'):
             pass
-            # - perform csv FTP download - use the argument to check if date substring exists and download all
-            # files with that date
+            # perform csv FTP download - use the argument to check if date substring exists and download all
+            # - files with that date
+            # use validation functions
+            # download file into correct dir
         else:
             print('This file is a duplicate')
     except ValueError as err:
@@ -42,5 +44,3 @@ def user_menu():
         else:
             print("Input not recognised")
 
-
-user_menu()
