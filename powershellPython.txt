@@ -5,3 +5,10 @@ $trigger.StartBoundary = [DateTime]::Parse($trigger.StartBoundary).ToLocalTime()
 $settings = New-ScheduledTaskSettingsSet -ExecutionTimeLimit 0
 
 Register-ScheduledTask -Action $action -Trigger $trigger -Settings $settings -TaskName "medical csv download" -Description "download csv"
+
+import subprocess, sys
+
+p = subprocess.Popen(["powershell.exe",
+              "C:\WINDOWS\system32/taskschd.msc"],
+              stdout=sys.stdout)
+p.communicate()
