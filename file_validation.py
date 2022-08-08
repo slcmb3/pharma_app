@@ -34,7 +34,9 @@ def check_missing_data(csv_file):
         for i in range(get_row_count(df)):
             if pd.isnull(df.loc[i, header]):
                 print(f'Missing value in column: {header}, in row {i}')
-                # return boolean
+                return False
+            else:
+                return True
 
 
 def check_valid_entry(csv_file):
@@ -50,7 +52,7 @@ def check_valid_entry(csv_file):
 
 
 def check_batch_id(csv_file):
-    # confirm batch id is not a duplicate
+    # confirm batch id is not a duplicate >> get from file downloads
     for batch_id in df['batch_id']:
         if batch_id not in all_batch_ids:
             all_batch_ids.append(batch_id)
