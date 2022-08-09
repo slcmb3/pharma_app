@@ -2,19 +2,7 @@ import datetime
 from config import *
 
 
-# def get_username():
-#     username = input('Enter FTP username: ')
-#     return username
-#
-#
-# def get_password():
-#     password = input('Enter FTP password: ')
-#     return password
-
-
 def interactive():
-    # username = get_username()
-    # password = get_password()
 
     # date_entry = input('Enter date in YYYY-MM-DD format')
     # try:
@@ -27,12 +15,11 @@ def interactive():
 
     username = input('Enter FTP username: ')
     password = input('Enter FTP password: ')
-    year = input('Enter year: ')
-    month = input('Enter month: ')
-    day = input('Enter day: ')
+    year = input('Enter year of CSV (YYYY): ')
+    month = input('Enter month of CSV (MM): ')
+    day = input('Enter day of CSV (DD): ')
     date = year+month+day
     download_file(date, username, password)
-
 
 
 def scheduler():
