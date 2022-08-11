@@ -58,7 +58,9 @@ def archive_file():
 
 
 def scheduler(username, password):
-    # set a date and time for scheduler to download files
+    frequency = input('Enter frequency of csv download scheduler: ')
+    time = input('Enter time for csv download: ')
+    # set_task_schedule(frequency, time)
     pass
 
 
