@@ -1,5 +1,5 @@
-import os
 import pandas as pd
+import os
 
 csv_download = 'file_downloads'
 csv_validated = 'file_validated'
@@ -24,11 +24,9 @@ def check_headers(df):
     # confirm no headers missing
     headers = list(df)
     if headers == header_names:
-        print('Headers correct')
-        return True
+        return 'Headers correct'
     else:
-        print('Incorrect headers')
-        return False
+        return 'Incorrect headers'
 
 
 def check_missing_data(df):
@@ -36,8 +34,7 @@ def check_missing_data(df):
     for header in header_names:
         for i in range(get_row_count(df)):
             if pd.isnull(df.loc[i, header]):
-                print(f'Missing value in column: {header}, in row {i}')
-                return False
+                return f'Missing value in column: {header}, in row {i}'
 
 
 def check_valid_entry(df):
@@ -49,47 +46,52 @@ def check_valid_entry(df):
             if cell != 'nan':
                 cell = float(cell)
                 if cell >= 10:
-                    print('Error', df.loc[i, header])
-                    return False
+                    return 'Error', df.loc[i, header]
+
+
+def get_batch_ids():
+    # get all validated batch id's and append to list
+    os.chdir('file_validated')
+    for file in os.listdir('.'):
+        df = pd.read_csv(file)
+        for batch_id in df['batch_id']:
+            all_batch_ids.append(batch_id)
 
 
 def check_batch_id(df):
     # confirm batch id is not a duplicate
     for batch_id in df['batch_id']:
         if batch_id not in all_batch_ids:
-            all_batch_ids.append(batch_id)
-            return True
+            # all_batch_ids.append(batch_id)
+            return 'This batch file is not a duplicate'
         else:
-            print("This batch file already exists")
-            return False
+            return 'This batch file already exists'
 
 
 def check_malformed(csv_file):
     # check for any file malformations
     if csv_file.endswith('.csv'):
-        print('File correct')
-        return True
+        return 'File correct'
     else:
-        print('File malformed')
-        return False
+        return 'File malformed'
 
 
 def validate_downloaded_csvs():
-    for file in os.listdir('file_downloads'):
-        print('---------')
-        print(file)
-        csv_file_name = os.path.join(csv_download, file)
-        check_malformed(csv_file_name)
-        df = pd.read_csv(csv_file_name)
-        check_headers(df)
-        check_missing_data(df)
-        check_valid_entry(df)
-        check_batch_id(df)
-        print('---------')
+    # create log of validation
+    downloaded_csvs = os.listdir('.')
+    if len(downloaded_csvs) == 0:
+        print('Folder Empty')
+    else:
+        for file in downloaded_csvs:
+            with open('validation_log.txt', 'a') as f:
+                print('---------', file=f)
+                print(file, file=f)
+                print(check_malformed(file), file=f)
+                df = pd.read_csv(file)
+                print(check_headers(df), file=f)
+                print(check_missing_data(df), file=f)
+                print(check_valid_entry(df), file=f)
+                print(check_batch_id(df), file=f)
+                print('---------', file=f)
 
 
-validate_downloaded_csvs()
-
-# verify batch ids from downloads
-# push validated files to validated folder
-# task schedule
