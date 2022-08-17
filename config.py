@@ -1,8 +1,9 @@
 import ftplib
 from ftplib import FTP
+from creds import *
 
 
-FTP_HOST = "127.0.0.1"
+FTP_HOST = host
 ftp = FTP(FTP_HOST)
 
 

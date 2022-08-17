@@ -1,10 +1,14 @@
 import shutil
+import typer
+from datetime import date
 from os.path import exists
 from config import *
 from file_validation import *
 
+app = typer.Typer()
 
-def get_file(date, user, passwd):
+
+def get_file(combined_date, user, passwd):
     get_batch_ids()
     if ftp_login_check(user, passwd):
         ftp.cwd('/ftp/')
@@ -14,7 +18,7 @@ def get_file(date, user, passwd):
         os.chdir('file_downloads')
         print('If file exists, check file_downloads for CSV')
         for filename in filenames:
-            if filename.startswith(f'MED_DATA_{date}'):
+            if filename.startswith(f'MED_DATA_{combined_date}'):
                 local_file = open(filename, 'wb')
                 ftp.retrbinary('RETR ' + filename, local_file.write, 1024)
                 local_file.close()
@@ -35,8 +39,8 @@ def interactive_download(username, password):
     year = input('Enter year of CSV (YYYY): ')
     month = input('Enter month of CSV (MM): ')
     day = input('Enter day of CSV (DD): ')
-    date = year+month+day
-    get_file(date, username, password)
+    combined_date = year+month+day
+    get_file(combined_date, username, password)
 
 
 def show_validation():
@@ -64,7 +68,8 @@ def scheduler(username, password):
     pass
 
 
-def user_menu():
+@app.command()
+def start():
     while True:
         command = input("""
         
@@ -91,5 +96,13 @@ def user_menu():
             print("Input not recognised")
 
 
+@app.command()
+def auto_download():
+    today = str(date.today())
+    today = today.replace('-', '')
+    get_file(today, ftp_username, ftp_password)
+
+
 if __name__ == "__main__":
-    user_menu()
+    auto_download()
+    #app()
