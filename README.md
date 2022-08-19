@@ -1,5 +1,6 @@
 # pharma_app
 group project
+- includes unit testing 
 
 # Download CSV files from ftp server
 - set up up ftp server
