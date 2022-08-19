@@ -8,8 +8,8 @@ from file_validation import *
 app = typer.Typer()
 
 
-def get_file(combined_date, user, passwd, host):
-    ftp = return_ftp_host(host)
+def get_file(combined_date, user, passwd):
+    # ftp = return_ftp_host(host)
     get_batch_ids()
     if ftp_login_check(user, passwd):
         ftp.cwd('/ftp/')
@@ -30,20 +30,21 @@ def get_file(combined_date, user, passwd, host):
 def ftp_credentials(menu_type):
     username = input('Enter FTP username: ')
     password = input('Enter FTP password: ')
-    host = input('Enter FTP host: ')
+    # host = input('Enter FTP host: ')
     if menu_type == 'interactive':
-        interactive_download(username, password, host)
+        interactive_download(username, password)
     elif menu_type == 'scheduler':
-        set_schedule_creds(username, password, host)
-        scheduler()
+        # set_schedule_creds(username, password, host)
+        # scheduler()
+        pass
 
 
-def interactive_download(username, password, host):
+def interactive_download(username, password):
     year = input('Enter year of CSV (YYYY): ')
     month = input('Enter month of CSV (MM): ')
     day = input('Enter day of CSV (DD): ')
-    combined_date = year+month+day
-    get_file(combined_date, username, password, host)
+    combined_date = year + month + day
+    get_file(combined_date, username, password)
 
 
 def show_validation():
@@ -63,8 +64,8 @@ def archive_file():
     dest_path = 'file_validated'
     shutil.move(src_path, dest_path)
 
-
 def set_schedule_creds(username, password, host):
+    # this stores credentials in txt to be retrieved during auto download
     f = open('creds.txt', 'w')
     f.write(username + '\n')
     f.write(password + '\n')
@@ -86,11 +87,7 @@ def get_schedule_creds(cred_type):
     return cred
 
 
-
-
-
-
-def scheduler():
+def scheduler(username, password):
     frequency = input('Enter frequency of csv download scheduler: ')
     time = input('Enter time for csv download: ')
     # set_task_schedule(frequency, time)
@@ -101,18 +98,18 @@ def scheduler():
 def start():
     while True:
         command = input("""
-        
+
         ***     Medical CSV Downloader      ***
-                
-        
+
+
                    Select Option:
-                   
+
                 1. Download CSV
-                
+
                 2. Archive Validated CSV
-                    
+
                 3. Set Scheduled Download
-        
+
                     """)
         if command == "1":
             ftp_credentials('interactive')
@@ -127,14 +124,14 @@ def start():
 
 @app.command()
 def auto_download():
-    ftp_name = get_schedule_creds('username')
-    ftp_passw = get_schedule_creds('password')
-    ftp_host = get_schedule_creds('host')
+    # ftp_name = get_schedule_creds('username')
+    # ftp_passw = get_schedule_creds('password')
+    # ftp_host = get_schedule_creds('host')
     today = str(date.today())
     today = today.replace('-', '')
-    get_file(today, ftp_name, ftp_passw, ftp_host)
+    get_file(today, ftp_username, ftp_password)
 
 
 if __name__ == "__main__":
-    auto_download()
+    start()
     #app()

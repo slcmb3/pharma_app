@@ -1,14 +1,17 @@
 import ftplib
 from ftplib import FTP
+from creds import *
 
 
-def return_ftp_host(host):
-    ftp = FTP(host)
-    return ftp
+FTP_HOST = host
+ftp = FTP(FTP_HOST)
+# def return_ftp_host(host):
+#     ftp = FTP(host)
+#     return ftp
 
 
-def ftp_login_check(user, passwd, host):
-    ftp = return_ftp_host(host)
+def ftp_login_check(user, passwd):
+    # ftp = return_ftp_host(host)
     try:
         ftp.login(user=user, passwd=passwd)
         return True
