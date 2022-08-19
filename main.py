@@ -9,6 +9,13 @@ app = typer.Typer()
 
 
 def get_file(combined_date, user, passwd):
+    """
+
+    :param combined_date: date of csv file
+    :param user: ftp username
+    :param passwd: ftp password
+    :return: this will retrieve all CSVs of specified date and pass them to the validation functions
+    """
     # ftp = return_ftp_host(host)
     get_batch_ids()
     if ftp_login_check(user, passwd):
@@ -28,9 +35,13 @@ def get_file(combined_date, user, passwd):
 
 
 def ftp_credentials(menu_type):
+    """
+    :param menu_type: interactive or automatic login option
+    :return: interactive: user menu // scheduler: set automated download
+    """
     username = input('Enter FTP username: ')
     password = input('Enter FTP password: ')
-    # host = input('Enter FTP host: ')
+    host = input('Enter FTP host: ')
     if menu_type == 'interactive':
         interactive_download(username, password)
     elif menu_type == 'scheduler':
@@ -48,6 +59,9 @@ def interactive_download(username, password):
 
 
 def show_validation():
+    """
+    :return: display the validation information from last csv download
+    """
     validation_log = 'file_downloads/validation_log.txt'
     if exists(validation_log):
         f = open(validation_log, 'r')
@@ -58,14 +72,23 @@ def show_validation():
 
 
 def archive_file():
+    """
+    :return: move downloaded csv to an archive
+    """
     show_validation()
     csv_file = input('Enter file name for archive: ')
     src_path = f'file_downloads/{csv_file}'
     dest_path = 'file_validated'
     shutil.move(src_path, dest_path)
 
+
 def set_schedule_creds(username, password, host):
-    # this stores credentials in txt to be retrieved during auto download
+    """
+    :param username: ftp username
+    :param password: ftp password
+    :param host: ftp host
+    :return: to enable task scheduler to auto download csv, login credentials are taken and stored in text file
+    """
     f = open('creds.txt', 'w')
     f.write(username + '\n')
     f.write(password + '\n')
@@ -74,6 +97,10 @@ def set_schedule_creds(username, password, host):
 
 
 def get_schedule_creds(cred_type):
+    """
+    :param cred_type: ftp credential option
+    :return: the selected ftp credential from creds.txt file (for task scheduled download)
+    """
     f = open('creds.txt', 'r')
     username = f.readline().rstrip()
     passw = f.readline().rstrip()
@@ -88,6 +115,7 @@ def get_schedule_creds(cred_type):
 
 
 def scheduler(username, password):
+    # function to set PowerShell task schedule download
     frequency = input('Enter frequency of csv download scheduler: ')
     time = input('Enter time for csv download: ')
     # set_task_schedule(frequency, time)
@@ -124,9 +152,7 @@ def start():
 
 @app.command()
 def auto_download():
-    # ftp_name = get_schedule_creds('username')
-    # ftp_passw = get_schedule_creds('password')
-    # ftp_host = get_schedule_creds('host')
+    # ftp_username = get_schedule_creds('username')
     today = str(date.today())
     today = today.replace('-', '')
     get_file(today, ftp_username, ftp_password)

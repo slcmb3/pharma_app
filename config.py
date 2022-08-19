@@ -5,6 +5,7 @@ from creds import *
 
 FTP_HOST = host
 ftp = FTP(FTP_HOST)
+
 # def return_ftp_host(host):
 #     ftp = FTP(host)
 #     return ftp
