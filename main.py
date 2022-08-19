@@ -8,7 +8,8 @@ from file_validation import *
 app = typer.Typer()
 
 
-def get_file(combined_date, user, passwd):
+def get_file(combined_date, user, passwd, host):
+    ftp = return_ftp_host(host)
     get_batch_ids()
     if ftp_login_check(user, passwd):
         ftp.cwd('/ftp/')
@@ -29,18 +30,20 @@ def get_file(combined_date, user, passwd):
 def ftp_credentials(menu_type):
     username = input('Enter FTP username: ')
     password = input('Enter FTP password: ')
+    host = input('Enter FTP host: ')
     if menu_type == 'interactive':
-        interactive_download(username, password)
+        interactive_download(username, password, host)
     elif menu_type == 'scheduler':
-        pass
+        set_schedule_creds(username, password, host)
+        scheduler()
 
 
-def interactive_download(username, password):
+def interactive_download(username, password, host):
     year = input('Enter year of CSV (YYYY): ')
     month = input('Enter month of CSV (MM): ')
     day = input('Enter day of CSV (DD): ')
     combined_date = year+month+day
-    get_file(combined_date, username, password)
+    get_file(combined_date, username, password, host)
 
 
 def show_validation():
@@ -61,7 +64,33 @@ def archive_file():
     shutil.move(src_path, dest_path)
 
 
-def scheduler(username, password):
+def set_schedule_creds(username, password, host):
+    f = open('creds.txt', 'w')
+    f.write(username + '\n')
+    f.write(password + '\n')
+    f.write(host + '\n')
+    f.close()
+
+
+def get_schedule_creds(cred_type):
+    f = open('creds.txt', 'r')
+    username = f.readline().rstrip()
+    passw = f.readline().rstrip()
+    host = f.readline().rstrip()
+    if cred_type == 'username':
+        cred = username
+    elif cred_type == 'password':
+        cred = passw
+    elif cred_type == 'host':
+        cred = host
+    return cred
+
+
+
+
+
+
+def scheduler():
     frequency = input('Enter frequency of csv download scheduler: ')
     time = input('Enter time for csv download: ')
     # set_task_schedule(frequency, time)
@@ -98,9 +127,12 @@ def start():
 
 @app.command()
 def auto_download():
+    ftp_name = get_schedule_creds('username')
+    ftp_passw = get_schedule_creds('password')
+    ftp_host = get_schedule_creds('host')
     today = str(date.today())
     today = today.replace('-', '')
-    get_file(today, ftp_username, ftp_password)
+    get_file(today, ftp_name, ftp_passw, ftp_host)
 
 
 if __name__ == "__main__":
